@@ -1,3 +1,7 @@
+This is not my creation All credits to Crypto-Cat
+
+Original Repository and Profile - https://github.com/Crypto-Cat
+
 # Hacking Resources
 
 CTF chall write-ups, files, scripts etc to go with my **[video walkthroughs](https://www.youtube.com/@_CryptoCat)**
