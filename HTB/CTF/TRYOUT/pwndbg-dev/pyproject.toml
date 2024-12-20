@@ -1,0 +1,222 @@
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+ignore = [
+    "A003",
+    "E402",
+    "E501",
+    "E731",
+    "F405",
+    "F821",
+    "W505",
+]
+
+select = [
+    "A",  # flake8-builtins
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "W",  # pycodestyle
+    "C4", # flake8-comprehensions
+    "ISC", # flake8-implicit-str-concat
+    "SLOT", # flake8-slots
+    "FLY", # flynt
+    "PGH", # pygrep-hooks
+    "RET506", # flake8-return: superfluous-else-raise
+    "RET507", # flake8-return: superfluous-else-continue
+    "RET508", # flake8-return: superfluous-else-break
+    # We want to enable the below lints, but they currently return too many errors
+    # "RET505", # flake8-return: superfluous-else-return
+    # "SLF" # flake8-self
+    # "SIM", # flake8-simplify
+    # "PTH", # flake8-use-pathlib
+]
+
+[tool.ruff.lint.flake8-builtins]
+builtins-ignorelist = [
+    "all",
+    "bin",
+    "breakpoint",
+    "copyright",
+    "dir",
+    "exit",
+    "format",
+    "hex",
+    "map",
+    "max",
+    "min",
+    "next",
+    "type",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+strict_optional = false
+check_untyped_defs = true
+allow_untyped_globals = false
+allow_redefinition = true
+allow_any_generics = false
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+# warn_return_any = true
+# warn_unreachable = true
+show_error_context = true
+pretty = true
+show_error_codes = true
+incremental = false
+disable_error_code = [
+    # https://github.com/python/mypy/issues/6232
+    "assignment"
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "pwndbg.gdblib.elf",
+    "pwndbg.aglib.elf",
+]
+disable_error_code = ["name-defined"]
+
+[[tool.mypy.overrides]]
+module = [
+    "pwndbg.aglib.arch",
+    "pwndbg.color.*",
+    "pwndbg.commands.context",
+    "pwndbg.commands.cymbol",
+    "pwndbg.commands.hexdump",
+    "pwndbg.commands.procinfo",
+    "pwndbg.commands.reload",
+    "pwndbg.commands.version",
+    "pwndbg.exception",
+    "pwndbg.gdblib.dt",
+    "pwndbg.aglib.dynamic",
+    "pwndbg.gdblib.events",
+    "pwndbg.gdblib.got",
+    "pwndbg.gdblib.heap_tracking",
+    "pwndbg.gdblib.stack",
+    "pwndbg.aglib.heap.*",
+    "pwndbg.hexdump",
+    "pwndbg.ui",
+    "pwndbg.wrappers.*",
+]
+disable_error_code = ["attr-defined"]
+
+[[tool.mypy.overrides]]
+module = [
+    "pwndbg.commands.telescope",
+]
+disable_error_code = ["attr-defined", "index"]
+
+[[tool.mypy.overrides]]
+module = [
+    "pwndbg.aglib.nearpc",
+    "pwndbg.aglib.typeinfo",
+    "pwndbg.gdblib.nearpc",
+    "pwndbg.gdblib.typeinfo",
+]
+disable_error_code = ["name-defined", "attr-defined"]
+
+[[tool.mypy.overrides]]
+module = [
+    "pwndbg.aglib.disasm.*",
+]
+disable_error_code = ["index", "name-defined", "attr-defined"]
+
+[[tool.mypy.overrides]]
+module = ["capstone.*", "unicorn.*", "pwnlib.*", "elftools.*", "ipdb.*", "r2pipe", "rzpipe", "rich.*", "pt_gdb", "lldb.*", "gnureadline"]
+ignore_missing_imports = true
+
+[tool.isort]
+profile = "black"
+force_single_line = true
+known_third_party = ["capstone", "unicorn", "psutil", "pycparser", "gdb", "lldb"]
+add_imports = "from __future__ import annotations"
+
+[tool.coverage.run]
+branch = true
+parallel = true
+disable_warnings = ["module-not-imported"]
+source = ["${SRC_DIR-.}"]
+omit = ["ida_script.py"]
+data_file = ".cov/coverage"
+
+[tool.coverage.report]
+omit = ["ida_script.py", "tests/*"]
+
+[tool.poetry]
+name = "pwndbg"
+description = "Exploit Development and Reverse Engineering with GDB Made Easy"
+version = "2024.08.29"
+authors = ["Dominik 'disconnect3d' Czarnota <dominik.b.czarnota+dc@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "pwndbg" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+capstone = "^5.0.3"
+ipython = "^8.27.0"
+# Needed by Capstone due to https://github.com/pwndbg/pwndbg/pull/1946#issuecomment-1921603947
+setuptools = "^70.0.0"
+psutil = "^5.9.8"
+pwntools = "^4.14.0b0"
+pycparser = "^2.22"
+pyelftools = "^0.29"
+pygments = "^2.18.0"
+ropgadget = "7.3"
+sortedcontainers = "^2.4.0"
+tabulate = "^0.9.0"
+typing-extensions = "^4.12.0"
+unicorn = "^2.1.1"
+requests = "^2.32.3"
+pt = {git = "https://github.com/martinradev/gdb-pt-dump", rev = "50227bda0b6332e94027f811a15879588de6d5cb"}
+
+[tool.poetry.group.lldb]
+optional = true
+
+[tool.poetry.group.lldb.dependencies]
+# The LLDB REPL requires readline.
+gnureadline = "^8.2.10"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+coverage = {version = "^7.5.0", extras = ["toml"]}
+isort = "^5.13.2"
+mypy = "^1.10.0"
+# Newer versions of pytest break CI on GitHub
+pytest = "8.0.2"
+pytest-cov = "^4.1.0"
+rich = "^13.7.1"
+ruff = "^0.4.1"
+sortedcontainers-stubs = "^2.4.2"
+testresources = "^2.0.1"
+tomli = "^2.0.1"
+types-gdb = "^12.1.4.20240704"
+types-psutil = "^5.9.5.20240423"
+types-pygments = "^2.17.0.20240310"
+types-requests = "^2.31.0.20240406"
+types-tabulate = "^0.9.0.20240106"
+vermin = "^1.6.0"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+mdutils = "*"
+mkdocs = "*"
+mkdocs-gen-files = "*"
+mkdocs-material = "*"
+mkdocs-minify-plugin = "*"
+mkdocs-rss-plugin = "*"
+mkdocstrings = "*"
+mkdocstrings-python = "*"
+pymdown-extensions = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
