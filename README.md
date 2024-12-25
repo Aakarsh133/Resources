@@ -8,6 +8,7 @@ I am compiling my resources here
 <li><a href= "https://pwn.college">Pwn College</a></li>
 <li><a href= "https://github.com/Naetw/CTF-pwn-tips">Some Good Pwn tips</a></li>
 <li><a href= "https://docs.pwntools.com/en/stable/">Pwntools Docs</a></li>
+<li><a href= "https://trustfoundry.net/2019/07/18/basic-rop-techniques-and-tricks/">Basic ROP Techniques</a></li>
 </ul>
 
 
